@@ -1,26 +1,5 @@
 module Main where
-{-
-import Graphics.Gloss
 
-window :: Display
-window = InWindow "Nice Window" (1000, 500) (10, 10)
-
-background :: Color
-background = white
-
-drawing :: Picture
-drawing = polygon (rectanglePath 50 50)
-
-coords = [(-200, 200), (-100, 200), (0, 200)]
-
-draw :: Float -> Float -> IO ()
-draw x y = display window background (translate (x) (y) drawing)
-
-main :: IO() 
-main = do
-    let lst = coords
-    (x, y) <- lst
-    return 1-}
 
 import Graphics.Gloss
 import Algorithms
