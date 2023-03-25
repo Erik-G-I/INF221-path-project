@@ -3,6 +3,7 @@ module Main where
 
 import Graphics.Gloss
 import Algorithms
+import BFS
 
 
 
