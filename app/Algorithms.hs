@@ -15,7 +15,7 @@ import Data.Set as Set hiding (filter)
         a previous node that has the shortest path to the current node
 -}
 data Node = Node
-    {   name      ::   Char,
+    {   name      ::   String,
         dist      ::   Int,
         neighbors ::   [Node],
         parent    ::   Node
@@ -34,16 +34,20 @@ instance Show Node where
 
 
 
-a = Node 'A' 0 [b, c, f] a
-b = Node 'B' 1000 [e] b
-c = Node 'C' 1000 [d] c
-d = Node 'D' 1000 [] d
-e = Node 'E' 1000 [d] e
-f = Node 'F' 1000 [d] f
+a = Node "A" 0 [b, c] a
+b = Node "B" 1000 [a, d] b
+c = Node "C" 1000 [a, d, e] c
+d = Node "D" 1000 [b, e] d
+e = Node "E" 1000 [c, d] e
 
-g = Graph (Map.fromList [(a, Set.fromList [b, c]), (b, Set.empty), (c, Set.singleton d), (d, Set.empty)])
+graph = Graph (Map.fromList [
+    (a, Set.fromList $ neighbors a), 
+    (b, Set.fromList $ neighbors b), 
+    (c, Set.fromList $ neighbors c), 
+    (d, Set.fromList $ neighbors d),
+    (e, Set.fromList $ neighbors e)])
 
--- A graph of nodes can be represented as map of nodes and their shortest path
+-- A graph of nodes can be represented as map of nodes and a set of their neighbors
 data Graph = Graph (Map Node (Set Node)) | Empty
 
 
@@ -90,7 +94,7 @@ qsort (x:xs) = qsort smaller ++ [x] ++ qsort larger
     Visited
     Queue
     Current Path
-    Returns Shortest Path
+    Returns First Found Path
 -}
 bfs :: Graph -> Node -> Node -> [Node] -> [Node] -> [Node]
 bfs Empty _ _ _ _ = []
@@ -100,7 +104,7 @@ bfs g currentNode endNode visited queue =
     then tracePath currentNode []
     else bfs g nextNode endNode visited' queue'' where
         nbors = Prelude.map (updateDist currentNode) (neighbors currentNode)
-        queue' = queue ++ filter (not . (`inList` queue)) nbors
+        queue' = queue ++ filter (not . (`inList` (queue ++ visited))) nbors
         nextNode = head queue'
         queue'' = tail queue'
         visited' = visited ++ [currentNode]
@@ -114,8 +118,7 @@ bfs g currentNode endNode visited queue =
     End Node
     Visited
     Queue
-    Current Path
-    Returns Shortest Path
+    Returns First Found Path
 -}
 dfs :: Graph -> Node -> Node -> [Node] -> [Node] -> [Node]
 dfs Empty _ _ _ _ = []
@@ -125,13 +128,19 @@ dfs g currentNode endNode visited queue =
     then tracePath currentNode []
     else dfs g nextNode endNode visited' queue'' where
         nbors = Prelude.map (updateDist currentNode) (neighbors currentNode)
-        queue' = filter (not . (`inList` queue)) nbors ++ queue
+        queue' = filter (not . (`inList` (queue ++ visited))) nbors ++ queue
         nextNode = head queue'
         queue'' = tail queue'
         visited' = visited ++ [currentNode]
 
 {-
     Dijkstra's algorithm 
+    Graph
+    Current Node
+    End Node
+    Visited
+    Queue
+    Returns Shortest path
 -}
 dijkstra :: Graph -> Node -> Node -> [Node] -> [Node] -> [Node]
 dijkstra Empty _ _ _ _ = []
@@ -141,7 +150,7 @@ dijkstra g currentNode endNode visited queue =
     then tracePath currentNode []
     else dijkstra g nextNode endNode visited' queue'' where
         nbors = Prelude.map (updateDist currentNode) (neighbors currentNode)
-        queue' = queue ++ filter (not . (`inList` queue)) nbors
+        queue' = queue ++ filter (not . (`inList` (queue ++ visited))) nbors
         nextNode = head $ qsort queue'
         queue'' = tail queue'
         visited' = visited ++ [currentNode]
