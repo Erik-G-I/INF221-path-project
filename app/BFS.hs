@@ -19,6 +19,9 @@ instance Show Node where
 
 data Graph = Graph (Map Node (Set Node)) | Empty
 
+nodes :: Graph -> [Node]
+nodes (Graph g) = keys g
+
 
 {-
     Checks if a node is in a neighbor list
@@ -30,15 +33,21 @@ inList a (b:bs) = a == b || inList a bs       -- skriv om med fold for effektivi
 
 {-
     Breadth-First-Search
+
+    graph
+    start node
+    list of visited nodes
+    list of queued nodes
+    returns list of nodes in order of exploration
+
 -}
 bfs :: Graph -> Node -> [Node] -> [Node] -> [Node]
 bfs Empty _ _ _ = []
-bfs (Graph g) start visited queue = 
-    if visited == keys g || (null queue && null (children start))
+bfs g start visited queue = 
+    if visited == nodes g || (null queue && null (children start))
     then visited ++ [start]
     else
-    bfs graph next visited' queue' where
-        graph = Graph g
+    bfs g next visited' queue' where
         visited' = visited ++ [start]
         queue'' = queue ++ filter (not . (`inList` (queue ++ visited'))) (children start)
         next = head queue''
@@ -47,8 +56,8 @@ bfs (Graph g) start visited queue =
 
 
 
-a = Node "A" [b]
-b = Node "B" [d]
+a = Node "A" [b, c]
+b = Node "B" [d,b]
 c = Node "C" [e]
 d = Node "D" [c, e]
 e = Node "E" []

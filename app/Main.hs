@@ -2,22 +2,24 @@ module Main where
 
 
 import Graphics.Gloss
-import Algorithms
 import BFS
-
 
 
 -- Constants
 windowWidth, windowHeight :: Int
-windowWidth = 400
-windowHeight = 300
-
-gridSize :: Int
-gridSize = 100
+windowWidth = 640
+windowHeight = 480
 
 -- Create the window
 window :: Display
 window = InWindow "Grid" (windowWidth, windowHeight) (10, 10)
+
+getGraph :: Graph -> Picture
+getGraph g = pictures [text (name n) | n <- nodes g]
+
+{-
+gridSize :: Int
+gridSize = 100
 
 walls :: [Picture]
 walls = [polygon [(200, 300), (300, 300), (300, 200), (200, 200)], 
@@ -34,18 +36,10 @@ grid = pictures [ line [(x, 0), (x, fromIntegral windowHeight)] |
 -- Align the picture to the window
 align :: Picture
 align = translate (-(fromIntegral windowWidth / 2)) (-(fromIntegral windowHeight / 2)) grid
+-}
 
--- toGrid :: [String] -> Grid
--- toGrid l = 
-
--- getGrid :: Grid
--- getGrid = do
---     lns <- readFile "grid.txt"
---     let lst = lines lns
---    toGrid lst
 
 -- Main function to display the window and grid
 main :: IO ()
-main = display window white align
-
+main = display window white (getGraph BFS.graph)
 
