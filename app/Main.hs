@@ -14,8 +14,21 @@ windowHeight = 480
 window :: Display
 window = InWindow "Grid" (windowWidth, windowHeight) (10, 10)
 
-getGraph :: Graph -> Picture
-getGraph g = pictures [text (name n) | n <- nodes g]
+getGraph :: Graph -> [Picture]
+getGraph g = [thickCircle 20 4 | n <- nodes g]
+
+g = getGraph graph
+
+coords = [(-200, -100), (-100, 150), (0, -200), (50, 100), (150, 0)]
+
+pics = zipWith (\ (x, y) z -> translate x y z) coords g
+
+lns = [line [(-200, -100), (-100, 150)],
+         line [(-200, -100), (0, -200)],
+         line [(-100, 150), (50, 100)],
+         line [(0, -200), (150, 0)], 
+         line [(50, 100), (0, -200)],
+         line [(50, 100), (150, 0)]]
 
 {-
 gridSize :: Int
@@ -39,7 +52,8 @@ align = translate (-(fromIntegral windowWidth / 2)) (-(fromIntegral windowHeight
 -}
 
 
--- Main function to display the window and grid
+-- Main function to display the window
 main :: IO ()
-main = display window white (getGraph BFS.graph)
+main = do
+    display window white (scale 0.5 0.5 (pictures (pics ++ lns)))
 
