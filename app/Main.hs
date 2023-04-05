@@ -4,7 +4,6 @@ module Main where
 import Graphics.Gloss
 import BFS
 
-
 -- Constants
 windowWidth, windowHeight :: Int
 windowWidth = 640
@@ -15,13 +14,16 @@ window :: Display
 window = InWindow "Grid" (windowWidth, windowHeight) (10, 10)
 
 getGraph :: Graph -> [Picture]
-getGraph g = [thickCircle 20 4 | n <- nodes g]
+getGraph g = [uncurry translate (pos n) (thickCircle 20 4) | n <- nodes g]
+
+
 
 g = getGraph graph
 
 coords = [(-200, -100), (-100, 150), (0, -200), (50, 100), (150, 0)]
 
 pics = zipWith (\ (x, y) z -> translate x y z) coords g
+
 
 lns = [line [(-200, -100), (-100, 150)],
          line [(-200, -100), (0, -200)],
@@ -55,5 +57,4 @@ align = translate (-(fromIntegral windowWidth / 2)) (-(fromIntegral windowHeight
 -- Main function to display the window
 main :: IO ()
 main = do
-    display window white (scale 0.5 0.5 (pictures (pics ++ lns)))
-
+    display window white (scale 0.5 0.5 (pictures (g ++ lns)))

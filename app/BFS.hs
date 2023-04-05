@@ -6,8 +6,9 @@ import Data.Map as Map hiding (filter, null)
 import Data.Set as Set hiding (filter, null)
 
 data Node = Node
-        {   name    :: String,
-            children :: [Node]
+        {   name     :: String,
+            children :: [Node],
+            pos      :: (Float, Float)
         }
         deriving Ord
 
@@ -21,7 +22,6 @@ data Graph = Graph (Map Node (Set Node)) | Empty
 
 nodes :: Graph -> [Node]
 nodes (Graph g) = keys g
-
 
 {-
     Checks if a node is in a neighbor list
@@ -56,11 +56,11 @@ bfs g start visited queue =
 
 
 
-a = Node "A" [b, c]
-b = Node "B" [d,b]
-c = Node "C" [e]
-d = Node "D" [c, e]
-e = Node "E" []
+a = Node "A" [b, c] (-200, -100)
+b = Node "B" [d,b] (-100, 150)
+c = Node "C" [e] (0, -200)
+d = Node "D" [c, e] (50, 100)
+e = Node "E" [] (150, 0)
 
 
 graph = Graph (Map.fromList [
