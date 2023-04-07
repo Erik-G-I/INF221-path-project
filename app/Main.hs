@@ -11,7 +11,7 @@ windowHeight = 480
 
 -- Create the window
 window :: Display
-window = InWindow "Grid" (windowWidth, windowHeight) (10, 10)
+window = InWindow "Graph" (windowWidth, windowHeight) (10, 10)
 
 getGraph :: Graph -> [Picture]
 getGraph g = [uncurry translate (pos n) (thickCircle 20 4) | n <- nodes g]
@@ -19,10 +19,6 @@ getGraph g = [uncurry translate (pos n) (thickCircle 20 4) | n <- nodes g]
 
 
 g = getGraph graph
-
-coords = [(-200, -100), (-100, 150), (0, -200), (50, 100), (150, 0)]
-
-pics = zipWith (\ (x, y) z -> translate x y z) coords g
 
 
 lns = [line [(-200, -100), (-100, 150)],
