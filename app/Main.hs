@@ -13,20 +13,18 @@ windowHeight = 480
 window :: Display
 window = InWindow "Graph" (windowWidth, windowHeight) (10, 10)
 
-getGraph :: Graph -> [Picture]
-getGraph g = [uncurry translate (pos n) (thickCircle 20 4) | n <- nodes g]
+drawNodes :: Graph -> [Picture]
+drawNodes g = [uncurry translate (pos n) (thickCircle 20 4) | n <- nodes g]
 
+drawEdges :: Graph -> [Picture]
+drawEdges g = [x | n <- nodes g, x <- lns n]
 
+g = drawNodes graph
 
-g = getGraph graph
-
-
-lns = [line [(-200, -100), (-100, 150)],
-         line [(-200, -100), (0, -200)],
-         line [(-100, 150), (50, 100)],
-         line [(0, -200), (150, 0)], 
-         line [(50, 100), (0, -200)],
-         line [(50, 100), (150, 0)]]
+lns :: Node -> [Picture]
+lns n = if null (children n)
+        then []
+        else [line [pos n, pos x] | x <- children n]
 
 {-
 gridSize :: Int
@@ -53,4 +51,4 @@ align = translate (-(fromIntegral windowWidth / 2)) (-(fromIntegral windowHeight
 -- Main function to display the window
 main :: IO ()
 main = do
-    display window white (scale 0.5 0.5 (pictures (g ++ lns)))
+    display window white (scale 0.5 0.5 (pictures (drawNodes graph ++ drawEdges graph)))
