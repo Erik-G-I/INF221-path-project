@@ -24,10 +24,10 @@ drawStep :: Int -> [Node] -> Picture
 drawStep i n =
         let     m = n !! i
                 p = pos m
-                circle = uncurry translate p (circleSolid 20)
+                circle = color red (uncurry translate p (circleSolid 20))
         in circle
 
-g = drawNodes graph
+g = drawNodes graph <> drawEdges graph
 
 lns :: Node -> [Picture]
 lns n = if null (children n)
@@ -42,7 +42,7 @@ data Model = Model
 
 handleDisplay :: Model -> Picture
 handleDisplay (Model step True) = pictures (drawNodes graph ++ drawEdges graph)
-handleDisplay model = pictures (drawEdges graph <> [drawStep (step model) (bfs graph a [] [])])
+handleDisplay model = pictures (g <> [drawStep (step model) (bfs graph a [] [])])
 
 handleEvent :: Event -> Model -> Model
 handleEvent event model = model
