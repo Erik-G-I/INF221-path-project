@@ -34,7 +34,7 @@ lns n = if null (children n)
         then []
         else [line [pos n, pos x] | x <- children n]
 
--- testing animation using code from this lecture
+-- used code from this lecture as a starting point to do animations
 -- https://fosdem.org/2023/schedule/event/haskell_2d_animations/
 data Model = Model
         { step     :: Int,
@@ -50,7 +50,7 @@ handleEvent event model = model
 handleTime :: Float -> Model -> Model
 handleTime time (Model step state) =
         let step' = step + 1
-            state' = state || (step' == length (nodes graph) -1)
+            state' = state || (step' == length (nodes graph))
         in Model step' state'
 
 
