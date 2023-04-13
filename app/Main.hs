@@ -41,6 +41,7 @@ data Model = Model
           complete :: Bool}
 
 handleDisplay :: Model -> Picture
+handleDisplay (Model step True) = pictures (drawNodes graph ++ drawEdges graph)
 handleDisplay model = pictures (drawEdges graph <> [drawStep (step model) (bfs graph a [] [])])
 
 handleEvent :: Event -> Model -> Model
@@ -49,8 +50,8 @@ handleEvent event model = model
 handleTime :: Float -> Model -> Model
 handleTime time (Model step state) =
         let step' = step + 1
-            state' = state || (step' == length (nodes graph))
-        in Model step' state
+            state' = state || (step' == length (nodes graph) -1)
+        in Model step' state'
 
 
 
