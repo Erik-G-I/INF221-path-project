@@ -3,6 +3,7 @@ module Main where
 
 import Graphics.Gloss
 import BFS
+import Graphics.Gloss.Interface.IO.Interact (Event)
 
 -- Constants
 windowWidth, windowHeight :: Int
@@ -19,6 +20,13 @@ drawNodes g = [uncurry translate (pos n) (thickCircle 20 4) | n <- nodes g]
 drawEdges :: Graph -> [Picture]
 drawEdges g = [x | n <- nodes g, x <- lns n]
 
+drawStep :: Int -> [Node] -> Picture
+drawStep i n =
+        let     m = n !! i
+                p = pos m
+                circle = uncurry translate p (circleSolid 20)
+        in circle
+
 g = drawNodes graph
 
 lns :: Node -> [Picture]
@@ -26,29 +34,29 @@ lns n = if null (children n)
         then []
         else [line [pos n, pos x] | x <- children n]
 
-{-
-gridSize :: Int
-gridSize = 100
+-- testing animation using code from this lecture
+-- https://fosdem.org/2023/schedule/event/haskell_2d_animations/
+data Model = Model
+        { step     :: Int,
+          complete :: Bool}
 
-walls :: [Picture]
-walls = [polygon [(200, 300), (300, 300), (300, 200), (200, 200)], 
-                polygon [(200, 200), (300, 200), (300, 100), (200, 100)]]
+handleDisplay :: Model -> Picture
+handleDisplay model = pictures (drawEdges graph <> [drawStep (step model) (bfs graph a [] [])])
 
--- Create the grid
-grid :: Picture
-grid = pictures [ line [(x, 0), (x, fromIntegral windowHeight)] |
-                x <- [0, fromIntegral gridSize .. fromIntegral windowWidth] ]
-    <> pictures [ line [(0, y), (fromIntegral windowWidth, y)] |
-                y <- [0, fromIntegral gridSize .. fromIntegral windowHeight] ]
-    <> pictures walls
+handleEvent :: Event -> Model -> Model
+handleEvent event model = model
 
--- Align the picture to the window
-align :: Picture
-align = translate (-(fromIntegral windowWidth / 2)) (-(fromIntegral windowHeight / 2)) grid
--}
+handleTime :: Float -> Model -> Model
+handleTime time (Model step state) =
+        let step' = step + 1
+            state' = state || (step' == length (nodes graph))
+        in Model step' state
+
 
 
 -- Main function to display the window
 main :: IO ()
 main = do
-    display window white (scale 0.5 0.5 (pictures (drawNodes graph ++ drawEdges graph)))
+        let model = Model 0 False
+        play window white 1 model handleDisplay handleEvent handleTime
+    --display window white (scale 0.5 0.5 (pictures (drawNodes graph ++ drawEdges graph)))
