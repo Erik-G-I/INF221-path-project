@@ -20,12 +20,11 @@ drawNodes g = [uncurry translate (pos n) (thickCircle 20 4) | n <- nodes g]
 drawEdges :: Graph -> [Picture]
 drawEdges g = [x | n <- nodes g, x <- lns n]
 
-drawStep :: Int -> [Node] -> Picture
+drawStep :: Int -> [Node] -> [Picture]
 drawStep i n =
-        let     m = n !! i
-                p = pos m
-                circle = color red (uncurry translate p (circleSolid 20))
-        in circle
+        let ns = take i n
+            circles = [color red (uncurry translate (pos x) (circleSolid 20)) | x <- ns]
+        in circles
 
 g = drawNodes graph <> drawEdges graph
 
@@ -41,13 +40,13 @@ data Model = Model
           complete :: Bool}
 
 handleDisplay :: Model -> Picture
-handleDisplay (Model step True) = pictures (drawNodes graph ++ drawEdges graph)
-handleDisplay model = pictures (g <> [drawStep (step model) (bfs graph a [] [])])
+handleDisplay model = pictures (g <> drawStep (step model) (bfs graph a [] []))
 
 handleEvent :: Event -> Model -> Model
 handleEvent event model = model
 
 handleTime :: Float -> Model -> Model
+handleTime time (Model step True) = Model step True
 handleTime time (Model step state) =
         let step' = step + 1
             state' = state || (step' == length (nodes graph))
@@ -58,6 +57,6 @@ handleTime time (Model step state) =
 -- Main function to display the window
 main :: IO ()
 main = do
-        let model = Model 0 False
+        let model = Model 1 False
         play window white 1 model handleDisplay handleEvent handleTime
     --display window white (scale 0.5 0.5 (pictures (drawNodes graph ++ drawEdges graph)))
