@@ -48,7 +48,7 @@ data Model = Model
 
 -- handleDisplay :: Model -> [Node] -> Picture
 -- handleDisplay model lst = pictures (drawGraph <> drawStep (step model) lst)
-search = dfs graph a [] []
+search = bfs graph a [] []
 
 handleDisplay :: Model -> Picture
 handleDisplay model = pictures (drawGraph <> drawStep (step model) search)

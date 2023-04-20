@@ -4,6 +4,7 @@
 module GraphSearch where
 import Data.Map as Map hiding (filter, null, drop)
 import Data.Set as Set hiding (filter, null, drop)
+import Test.QuickCheck ( choose, Arbitrary(arbitrary), Gen )
 
 
 {-
@@ -110,7 +111,7 @@ b = Node "B" [e] (-100, 100)
 c = Node "C" [f, g] (-100, -50)
 d = Node "D" [h] (-20, -150)
 e = Node "E" [f] (0, 100)
-f = Node "F" [g, h] (0, 0)
+f = Node "F" [h] (0, 0)
 g = Node "G" [f] (0, -100)
 h = Node "H" [i] (100, -100)
 i = Node "I" [] (200, 0)
