@@ -1,7 +1,3 @@
-{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
-{-# HLINT ignore "Use newtype instead of data" #-}
-
-
 module Algorithms where
 import Control.Monad.Trans.Reader
 import Data.Map as Map hiding (filter)

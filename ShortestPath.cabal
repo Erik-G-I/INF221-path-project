@@ -26,7 +26,8 @@ version:            0.1.0.0
 extra-source-files: CHANGELOG.md
 
 executable ShortestPath
-    main-is:          Main.hs
+    main-is:    Main.hs
+                    
 
     -- Modules included in this executable, other than Main.
     -- other-modules:
@@ -38,5 +39,7 @@ executable ShortestPath
                     , transformers
                     , containers
                     , QuickCheck
+                    , mtl >=2
+                    
     hs-source-dirs:   app
     default-language: Haskell2010

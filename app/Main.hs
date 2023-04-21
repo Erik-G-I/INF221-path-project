@@ -4,6 +4,7 @@ module Main where
 import Graphics.Gloss
 import GraphSearch
 import Graphics.Gloss.Interface.IO.Interact (Event)
+import Graph (zxzzz)
 
 -- Constants
 windowWidth, windowHeight :: Int
@@ -48,7 +49,7 @@ data Model = Model
 
 -- handleDisplay :: Model -> [Node] -> Picture
 -- handleDisplay model lst = pictures (drawGraph <> drawStep (step model) lst)
-search = bfs graph a [] []
+search = dfs graph a [] []
 
 handleDisplay :: Model -> Picture
 handleDisplay model = pictures (drawGraph <> drawStep (step model) search)
@@ -68,10 +69,7 @@ handleTime time (Model step state) =
 -- Main function to display the window
 main :: IO ()
 main = do
-        -- putStrLn "Select search algorithm: (BFS, DFS)"
-        -- x <- getContents
-        -- let lst = selectSearch x
-        -- let model = Model 1 False
-        -- play window white 1 model (`handleDisplay` lst) handleEvent handleTime
         let model = Model 1 False
-        play window white 1 model handleDisplay handleEvent handleTime
+            fps = 2
+        play window white fps model handleDisplay handleEvent handleTime
+
