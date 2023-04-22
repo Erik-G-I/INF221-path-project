@@ -25,23 +25,35 @@ bfs graph start queue = do
     modify (start:)
     -- enqueue the neighbors
     let neighbors = edges graph !! id start
-        queue' = queue ++ filter (`notElem` queue) neighbors
+        queue' = queue ++ filter (`notElem` (queue ++ [id v | v <- execState get []])) neighbors
     -- continue until the queue is empty
     case queue' of
         [] -> get
         (x:xs) -> do
-            -- dequeue the next node
-            --let neighbors = edges graph !! x
-            --    unvisited = [nodes graph !! n | n <- filter (`notElem` xs) neighbors]
-            -- mark each unvisited neighbor as visited
-            --modify (reverse unvisited ++)
-
-            -- enqueue each unvisited neighbor        
             bfs graph (nodes graph !! x) xs
 
-ns = [Node 0 (-200, 0), Node 1 (-100, 50), Node 2 (0, 100), Node 3 (-100, -50)]
-g = Graph [[1, 3], [2, 3], [], []] ns
+
+{-
+    DFS search using state-monad to keep track of visited nodes
+-}
+dfs :: Graph -> Node -> [Int] -> State [Node] [Node]
+dfs graph start queue = do
+    -- mark the starting node as visited
+    modify (start:)
+    -- enqueue the neighbors
+    let neighbors = edges graph !! id start
+        queue' =  filter (`notElem` (queue ++ [id v | v <- execState get []])) neighbors ++ queue
+    -- continue until the queue is empty
+    case queue' of
+        [] -> get
+        (x:xs) -> do
+            dfs graph (nodes graph !! x) xs
+
+ns' = [Node 0 (-200, 0), Node 1 (-100, 50), Node 2 (0, 100), Node 3 (-100, -50)]
+ns = [Node 0 (-200, 0), Node 1 (-100, 50), Node 2 (-100, 0), Node 3 (-100, -50), Node 4 (0, 0), Node 5 (50, 25), Node 6 (50, -25), Node 7 (-50, -25), Node 8 (-50, -75), Node 9 (-50, 100), Node 10 (0, 150)]
+g' = Graph [[1, 3], [2, 3], [], []] ns'
+g = Graph [[1, 2, 3], [9], [4], [7, 8], [5, 6], [], [], [], [], [10, 4], []] ns
 
 x = reverse $ execState (bfs g (head ns) []) []
+y = reverse $ execState (dfs g (head ns) []) []
 
-y = bfs g (head ns)

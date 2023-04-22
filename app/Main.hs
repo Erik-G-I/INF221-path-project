@@ -67,10 +67,11 @@ data Model = Model
 -- handleDisplay :: Model -> [Node] -> Picture
 -- handleDisplay model lst = pictures (drawGraph <> drawStep (step model) lst)
 --search = dfs graph a [] []
-search = x
-
+bfssearch = x
+dfssearch = y
+ 
 handleDisplay :: Model -> Picture
-handleDisplay model = pictures (drawGraph' <> drawStep (step model) search)
+handleDisplay model = pictures (drawGraph' <> drawStep (step model) bfssearch)
 
 handleEvent :: Event -> Model -> Model
 handleEvent event model = model
@@ -89,6 +90,6 @@ handleTime time (Model step state) =
 main :: IO ()
 main = do
         let model = Model 1 False
-            fps = 1
+            fps = 2
         play window white fps model handleDisplay handleEvent handleTime
 
