@@ -39,7 +39,7 @@ executable ShortestPath
                     , transformers
                     , containers
                     , QuickCheck
-                    , mtl >=2
+                    , mtl
                     
     hs-source-dirs:   app
     default-language: Haskell2010
