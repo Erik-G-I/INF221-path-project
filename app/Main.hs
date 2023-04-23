@@ -4,7 +4,6 @@ module Main where
 
 
 import Graphics.Gloss
---import GraphSearch
 import Graphics.Gloss.Interface.IO.Interact (Event)
 import Graph
 import Prelude hiding (id)
@@ -21,18 +20,11 @@ window = InWindow "Graph" (windowWidth, windowHeight) (10, 10)
 drawNodes :: Graph -> [Picture]
 drawNodes g = [uncurry translate (pos n) (thickCircle 20 4) | n <- nodes g]
 
--- drawEdges :: Graph -> [Picture]
--- drawEdges g = [x | n <- nodes g, x <- lns n]
+drawEdges :: Graph -> [Picture]
+drawEdges g = [x | n <- nodes g, x <- lns' n g]
 
-drawEdges' :: Graph -> [Picture]
-drawEdges' g = [x | n <- nodes g, x <- lns' n g]
-
-
--- drawGraph :: [Picture]
--- drawGraph = drawNodes graph <> drawEdges graph
-
-drawGraph' :: [Picture]
-drawGraph' = drawNodes g <> drawEdges' g
+drawGraph :: [Picture]
+drawGraph = drawNodes g <> drawEdges g
 
 drawStep :: Int -> [Node] -> [Picture]
 drawStep i n =
@@ -47,7 +39,7 @@ drawStep i n =
 
 lns' :: Node -> Graph -> [Picture]
 lns' n g = do
-                let edg = edges g !! (id n)
+                let edg = edges g !! id n
                 if null edg
                 then []
                 else [line [pos n, pos (nodes g !! x)] | x <- edg]
@@ -64,14 +56,12 @@ data Model = Model
         { step     :: Int,
           complete :: Bool}
 
--- handleDisplay :: Model -> [Node] -> Picture
--- handleDisplay model lst = pictures (drawGraph <> drawStep (step model) lst)
 --search = dfs graph a [] []
 bfssearch = x
 dfssearch = y
  
 handleDisplay :: Model -> Picture
-handleDisplay model = pictures (drawGraph' <> drawStep (step model) bfssearch)
+handleDisplay model = pictures (drawGraph <> drawStep (step model) dfssearch)
 
 handleEvent :: Event -> Model -> Model
 handleEvent event model = model

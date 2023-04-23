@@ -21,11 +21,12 @@ data Graph = Graph {edges :: [[Int]], nodes :: [Node]}
 -}
 bfs :: Graph -> Node -> [Int] -> State [Node] [Node]
 bfs graph start queue = do
+    visited <- get
     -- mark the starting node as visited
     modify (start:)
     -- enqueue the neighbors
     let neighbors = edges graph !! id start
-        queue' = queue ++ filter (`notElem` (queue ++ [id v | v <- execState get []])) neighbors
+        queue' = queue ++ filter (`notElem` (queue ++ [id v | v <- visited])) neighbors
     -- continue until the queue is empty
     case queue' of
         [] -> get
@@ -38,11 +39,12 @@ bfs graph start queue = do
 -}
 dfs :: Graph -> Node -> [Int] -> State [Node] [Node]
 dfs graph start queue = do
+    visited <- get
     -- mark the starting node as visited
     modify (start:)
     -- enqueue the neighbors
     let neighbors = edges graph !! id start
-        queue' =  filter (`notElem` (queue ++ [id v | v <- execState get []])) neighbors ++ queue
+        queue' = filter (\n -> (nodes graph !! n) `notElem` visited) neighbors ++ queue
     -- continue until the queue is empty
     case queue' of
         [] -> get
@@ -50,7 +52,18 @@ dfs graph start queue = do
             dfs graph (nodes graph !! x) xs
 
 ns' = [Node 0 (-200, 0), Node 1 (-100, 50), Node 2 (0, 100), Node 3 (-100, -50)]
-ns = [Node 0 (-200, 0), Node 1 (-100, 50), Node 2 (-100, 0), Node 3 (-100, -50), Node 4 (0, 0), Node 5 (50, 25), Node 6 (50, -25), Node 7 (-50, -25), Node 8 (-50, -75), Node 9 (-50, 100), Node 10 (0, 150)]
+ns = [Node 0 (-200, 0), 
+      Node 1 (-100, 50), 
+      Node 2 (-100, 0), 
+      Node 3 (-100, -50), 
+      Node 4 (0, 0), 
+      Node 5 (50, 25), 
+      Node 6 (50, -25), 
+      Node 7 (-50, -25), 
+      Node 8 (-50, -75), 
+      Node 9 (-50, 100), 
+      Node 10 (0, 150)]
+
 g' = Graph [[1, 3], [2, 3], [], []] ns'
 g = Graph [[1, 2, 3], [9], [4], [7, 8], [5, 6], [], [], [], [], [10, 4], []] ns
 
