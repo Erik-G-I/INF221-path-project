@@ -18,6 +18,10 @@ data Graph = Graph {edges :: [[Int]], nodes :: [Node]}
 
 {-
     BFS search using state-monad to keep track of visited nodes
+
+    Graph - The graph that the algorithm will run on
+    Node - The starting node in the graph where the algoritm will start from
+    [Int] - Queue of the next nodes to be explored
 -}
 bfs :: Graph -> Node -> [Int] -> State [Node] [Node]
 bfs graph start queue = do
@@ -36,6 +40,10 @@ bfs graph start queue = do
 
 {-
     DFS search using state-monad to keep track of visited nodes
+
+    Graph - The graph that the algorithm will run on
+    Node - The starting node in the graph where the algoritm will start from
+    [Int] - Queue of the next nodes to be explored
 -}
 dfs :: Graph -> Node -> [Int] -> State [Node] [Node]
 dfs graph start queue = do
@@ -51,6 +59,9 @@ dfs graph start queue = do
         (x:xs) -> do
             dfs graph (nodes graph !! x) xs
 
+
+
+-- manual implementation of some graphs until i can generate graphs automatically
 ns' = [Node 0 (-200, 0), Node 1 (-100, 50), Node 2 (0, 100), Node 3 (-100, -50)]
 ns = [Node 0 (-200, 0), 
       Node 1 (-100, 50), 
