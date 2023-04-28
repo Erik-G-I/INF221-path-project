@@ -40,7 +40,10 @@ drawEdges g = [color white x | n <- nodes g, x <- lns n g]
 drawGraph :: Graph -> [Picture]
 drawGraph g = drawNodes g <> drawEdges g
 
--- Draws the visited nodes in red for the current step in the bfs visualization (Not working currently)
+{-
+        Draws the visited nodes in red for the current step in the bfs visualization
+        does not highlight edges at each step :((
+-}
 bfsDrawStep :: Graph -> Int -> [Node] -> [Picture]
 bfsDrawStep g i n =
         let ns = take i n
@@ -62,7 +65,10 @@ edgeStep s g ns = case s of
         "BFS" -> [color red (line [pos (last ns), pos $ bfsEdgeCheck g (head ns:[n])])| n <- tail ns] ++ edgeStep "BFS" g (tail ns)
         "DFS" -> color red (line [pos (last ns), pos $ dfsEdgeCheck g (reverse ns)]) : edgeStep "DFS" g (init ns)
 
--- not working properly
+{-
+        not working properly
+        could not manage to come up with a strategy to color the correct edges in bfs
+-} 
 bfsEdgeCheck :: Graph -> [Node] -> Node
 bfsEdgeCheck _ [n] = n
 bfsEdgeCheck g (n:m:ms) | id n `elem` edges g !! id m = m
