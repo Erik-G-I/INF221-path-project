@@ -26,9 +26,9 @@ data Graph = Graph {edges :: [[Int]], nodes :: [Node]}
 -}
 bfs :: Graph -> Node -> [Int] -> State [Node] [Node]
 bfs graph start queue = do
-    visited <- get
     -- mark the starting node as visited
     modify (start:)
+    visited <- get
     -- enqueue the neighbors
     let neighbors = edges graph !! id start
         queue' = queue ++ filter (`notElem` (queue ++ [id v | v <- visited])) neighbors
@@ -48,12 +48,13 @@ bfs graph start queue = do
 -}
 dfs :: Graph -> Node -> [Int] -> State [Node] [Node]
 dfs graph start queue = do
-    visited <- get
     -- mark the starting node as visited
     modify (start:)
+    visited <- get
     -- enqueue the neighbors
     let neighbors = edges graph !! id start
-        queue' = filter (\n -> (nodes graph !! n) `notElem` visited) neighbors ++ queue
+        --queue' = filter (\n -> (nodes graph !! n) `notElem` visited) neighbors ++ queue
+        queue' = filter (`notElem` (queue ++ [id v | v <- visited])) neighbors ++ queue
     -- continue until the queue is empty
     case queue' of
         [] -> get

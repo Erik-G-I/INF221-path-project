@@ -1,7 +1,7 @@
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 {-# HLINT ignore "Redundant id" #-}
 module WeightedGraph where
-import Control.Monad.Trans.State.Lazy
+import Control.Monad.State
 import Prelude hiding (id)
 
 -- Node has an id and a postition
