@@ -27,7 +27,7 @@ window = InWindow "Graph" (windowWidth, windowHeight) (10, 10)
         Takes a graph and outputs a list of pictures of each node
 -}
 drawNodes :: Graph -> [Picture]
-drawNodes g = [color white $ uncurry translate (pos n) (thickCircle 10 2) | n <- nodes g]
+drawNodes g = [uncurry translate (pos n) $ pictures [color white (thickCircle 10 2), color green $ scale 0.2 0.2 $ text (show $ id n)] | n <- nodes g]
 
 {- 
         Helper function for drawGraph
@@ -47,7 +47,7 @@ drawGraph g = drawNodes g <> drawEdges g
 bfsDrawStep :: Graph -> Int -> [Node] -> [Picture]
 bfsDrawStep g i n =
         let ns = take i n
-            circles = [ uncurry translate (pos x) (pictures [color red (circleSolid 10), color green $ scale 0.2 0.2 $ text (show $ id x)]) | x <- ns]
+            circles = [uncurry translate (pos x) $ pictures [color red (circleSolid 10), color green $ scale 0.2 0.2 $ text (show $ id x)] | x <- ns]
             --path = edgeStep "BFS" g ns
         in circles -- <> path
 
@@ -55,7 +55,7 @@ bfsDrawStep g i n =
 dfsDrawStep :: Graph -> Int -> [Node] -> [Picture]
 dfsDrawStep g i n =
         let ns = take i n
-            circles = [ uncurry translate (pos x) (pictures [color red (circleSolid 10), color green $ scale 0.2 0.2 $ text (show $ id x)]) | x <- ns]
+            circles = [uncurry translate (pos x) $ pictures [color red (circleSolid 10), color green $ scale 0.2 0.2 $ text (show $ id x)] | x <- ns]
             path = edgeStep "DFS" g ns
         in path <> circles
 
@@ -138,8 +138,7 @@ randomPositions n l = do
                 x <- randomRIO (-300, 300) :: IO Float
                 y <- randomRIO (-220, 220) :: IO Float
                 randomPositions n (return ((x, y) : lst))
-
-
+        
 {-
         n - how many nodes we want
         lst - list of positions
