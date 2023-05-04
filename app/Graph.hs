@@ -3,6 +3,7 @@
 module Graph where
 import Control.Monad.State
 import Prelude hiding (id)
+import System.Directory (exeExtension)
 
 
 -- Node has an id and a postition
@@ -24,7 +25,7 @@ data Graph = Graph {edges :: [[Int]], nodes :: [Node]}
     start - The starting node in the graph where the algoritm will start from
     queue - List of id's of the next nodes to be explored
 -}
-bfs :: Graph -> Node -> [Int] -> State [Node] [Node]
+bfs :: Graph -> Node -> [Int] -> State [Node] ()
 bfs graph start queue = do
     -- mark the starting node as visited
     modify (start:)
@@ -34,7 +35,7 @@ bfs graph start queue = do
         queue' = queue ++ filter (`notElem` (queue ++ [id v | v <- visited])) neighbors
     -- continue until the queue is empty
     case queue' of
-        [] -> get
+        [] -> put visited
         (x:xs) -> do
             bfs graph (nodes graph !! x) xs
 
@@ -46,7 +47,7 @@ bfs graph start queue = do
     start - The starting node in the graph where the algoritm will start from
     queue - List of id's of the next nodes to be explored
 -}
-dfs :: Graph -> Node -> [Int] -> State [Node] [Node]
+dfs :: Graph -> Node -> [Int] -> State [Node] ()
 dfs graph start queue = do
     -- mark the starting node as visited
     modify (start:)
@@ -56,7 +57,7 @@ dfs graph start queue = do
         queue' = filter (`notElem` (queue ++ [id v | v <- visited])) neighbors ++ queue
     -- continue until the queue is empty
     case queue' of
-        [] -> get
+        [] -> put visited
         (x:xs) -> do
             dfs graph (nodes graph !! x) xs
 

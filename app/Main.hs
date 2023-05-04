@@ -172,7 +172,8 @@ randomList n = do
   return (sort $ nub lst)
 
 {-
-        runs randomList function n times to create an adjacency list for all n nodes
+        runs randomList function n times to create an adjacency list for all n+1 nodes
+        (n+1 because of indexing)
 -}
 generateRandomLists :: Int -> IO [[Int]]
 generateRandomLists n = replicateM (n+1) $ randomList n
@@ -191,15 +192,17 @@ main :: IO ()
 main = do
         putStrLn "Input the size of graph you want to generate: "
         size <- getLine
-        --let m = [] :: [(Float, Float)]
-        --n <- randomPosition 100 (return m)
         g <- generateGraph (read size)
+
         putStr "Generated random graph of size: "
         print size
+
         putStrLn "Nodes: "
         print $ nodes g
+
         putStrLn "Edges: "
         print $ edges g
+
         let model = Model 1 False
             fps = 2 -- can be set to desired speed. I find 2 to be best for graphs of size 10 and up. 1 is good for smaller graphs
             n = nodes g
@@ -208,6 +211,7 @@ main = do
 
         putStrLn "Choose algorithm: (bfs / dfs)"
         strIn <- getLine
+
         let str = [toLower x | x <- strIn]
         case str of
                 "bfs" -> do 
