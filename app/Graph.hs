@@ -53,7 +53,6 @@ dfs graph start queue = do
     visited <- get
     -- enqueue the neighbors
     let neighbors = edges graph !! id start
-        --queue' = filter (\n -> (nodes graph !! n) `notElem` visited) neighbors ++ queue
         queue' = filter (`notElem` (queue ++ [id v | v <- visited])) neighbors ++ queue
     -- continue until the queue is empty
     case queue' of

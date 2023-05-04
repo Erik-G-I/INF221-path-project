@@ -149,9 +149,6 @@ generateNodes n lst = do
         return [Node n' (pos !! n') | n' <- range (0, n)]
 
 
-generateEdges :: Int -> IO [[Int]]
-generateEdges n = return [[x] | x <- range (0, n)]
-
 {-
         n - how many nodes the graph should contain
 -}
