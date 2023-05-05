@@ -223,4 +223,3 @@ main = do
                         print dfs'
                         play window black fps model (handleDisplay "DFS" g dfs') handleEvent (handleTime n)
                 _ -> putStrLn (str ++ " is not a valid algorithm")
-

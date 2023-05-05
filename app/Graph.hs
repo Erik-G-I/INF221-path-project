@@ -3,7 +3,6 @@
 module Graph where
 import Control.Monad.State
 import Prelude hiding (id)
-import System.Directory (exeExtension)
 
 
 -- Node has an id and a postition
@@ -32,7 +31,8 @@ bfs graph start queue = do
     visited <- get
     -- enqueue the neighbors
     let neighbors = edges graph !! id start
-        queue' = queue ++ filter (`notElem` (queue ++ [id v | v <- visited])) neighbors
+        visited' = map id visited
+        queue' = filter (`notElem` visited') (queue ++ neighbors)
     -- continue until the queue is empty
     case queue' of
         [] -> put visited
@@ -54,7 +54,8 @@ dfs graph start queue = do
     visited <- get
     -- enqueue the neighbors
     let neighbors = edges graph !! id start
-        queue' = filter (`notElem` (queue ++ [id v | v <- visited])) neighbors ++ queue
+        visited' = map id visited
+        queue' = filter (`notElem`  visited') (neighbors ++ queue)
     -- continue until the queue is empty
     case queue' of
         [] -> put visited
